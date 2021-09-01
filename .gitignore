@@ -1,4 +1,7 @@
-/node_moduleas
+/node_modules
 /server
 ui-debug.log
 firebase.json
+.gitignore
+.DS_Store
+/abis
