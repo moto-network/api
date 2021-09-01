@@ -1,0 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", {value: true});
+const NFTManagement = require("./NFTManagement");
+
+exports.uploadNFT = NFTManagement.uploadNFT;
+exports.recordNFT = NFTManagement.recordNFT;
+

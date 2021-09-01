@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "motonetwork",
+  "private_key_id": "dd52ce6878e472e56d87dcc263072ce96d76d369",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCtP7DevUjONu1p\nrZz+cYFSXXCWwr5V6MbKARUi5J4q4FB9yFqwJdR4/zzZUXG8pU7VyPt0pYkk9HPg\n6oytMhG9/D8fQG+VPCUMqzY6kHl7qecPQFIB9e5wJt2p7skFLHmiZN7KUDAqJsvC\naeenB+g2oTv59wPP/AFWUK8SpfWZ4rRBZReNGGK49cAOVDBCDJyDFziggZDRVmlo\n6I7kiarIDGK8OXVnrYgestMYtPzgXgSncrA7ODvPnH9rIdRj7L4VwUFO4dhfR202\neMG6UUu9FrbU19O/l5+oAP2OlsaO0I9Fl0B4SSptPnpu8EhWLFUzB41gDhW53otD\nvqXuq547AgMBAAECggEABzNygo+Tix61V4Mj11+YZHgFyf5mMuPt/090NXMTL+0K\n6298dX3dCvpw6Qd9lr24PSKRcRPAU4zllB+roTdHjYICjaX7/VP2pkQniN+gbQdu\n1y9xOSujsX2sEPgf2tsyYxGWQQp8NgROy9HjEwo9GKgy+fzOZ8Ktu4y2+itzveWg\n1V+ERAlr1lT9+6AcMEQZRAgXWSNZJgVA1WdHbrCez8Xd8kHvv+H1cPlx8/S4zhAF\nEo6WNEPsb8wzaJ/KktuJ3965/ihZZOfE9nB6WS3XL2Fe2g8ll5ygeVpoO951sDiL\negh9ZB+Re7DWg+iQfOkkdCXMZ2DCykG+Mti+8glBQQKBgQDgjnBdddmR+twRtgWg\nEC7Mn8Av76Lf+ix/R/ELojmQ4y2boV5C5qxBelI35uCEqUFmDrZpvLYHcxHqwP+b\nNYKVFZFs/EwyyqXFuANvrOceXMqjAmuCLZ/b7ElmKUvxqvSanNbIefyeGVpQfp0I\nlFK02mmxPbjTWRkKV+eO8nXN6QKBgQDFgg3CZyhFrRsntVZ5mrhzxqSIAvFFk0XX\nFU2E9B32hVLGV2PXvJ2IhykSOpnBQe+XNkbq4MyR/cAJHx6KIW9arW2uRZVQIR2I\nFdFYqcde4e/EjpHxc6+UjrZQglxadwJT5mfOZZYTukx2Lg/sKjO36GGpRk/K7bDJ\nCsO/4wFAgwKBgQCuyM/XPzq5MHyI4JgiTVZP+Ww7I5gwI+bsr0+E0aFjECDYyVK4\nWhnr4U0LrA5H1AJOcNc1GCjLRZrFkbGi2pSofCA0p3Cb/DXp3t/11awTawBivyh1\nLBQItzMubKhrE7jOe5OGecTSPkOY8eRC4Eg78uFfjv5Eq04dSey3zCs7uQKBgGz+\nNiWf08OPobqqAYyd60hIyKceKJMikJn+8YZ7SMWwEVvPAhQdzDl5jRq4J/1UK6mg\nlEYtw/aUt5LRD4NerBq4NhzD3YAYpjlhAOQS3SjpOe2YV8WM98ndb5LCPcDWh/xQ\n29w0hztfxa46ASNsrpnArZRCbuonfTWUsS2FUj2NAoGAJLk4QtQ0GIkqiEku3cbM\nGeQ9BEFo9hcQoQnI795modlcDDqgSrdXhIXHUl8rbizBbWBJVqMbmniNyiu/jzCd\nWmH+mRvDSaUgxGhb/NkxH7M7HPnx2VPbW6UFINLEUXd/7SEtA0mgoOPzRk0tO7E+\nNK8+qpJLg70vI4NryETKOuw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-master@motonetwork.iam.gserviceaccount.com",
+  "client_id": "101184774625895898251",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-master%40motonetwork.iam.gserviceaccount.com"
+}
