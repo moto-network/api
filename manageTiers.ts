@@ -25,10 +25,11 @@ export function createTier(req: any, res: any) {
   });
   busboy.on("finish", async () => {
     try {
-      if (tier && checkData(tier)) {
+      if (tier && checkData(tier) && validateTier(tier)) {
         createRecord(tier)
           .then((result: boolean) => {
-            res.status(200);
+            res.status(200).send();
+            console.log("processed tier: ", tier?.tierId);
           })
           .catch((err) => {
             console.log("update error;", err);
@@ -54,19 +55,30 @@ export function updateTier(req: any, res: any) {
   let tier: Tier | null = null;
   busboy.on("field", (fieldname: any, value: any) => {
     if (fieldname == "tier") {
-      tier = value;
+      try {
+        tier = JSON.parse(value);
+       }
+      catch (err) {
+        res.status(300).send();
+      }
+
     }
   });
   busboy.on("finish", async () => {
     try {
-      if (tier && checkData(tier)) {
+      if (tier && checkData(tier) && validateTier(tier)) {
         updateRecord(tier)
           .then((result: boolean) => {
-            res.status(200);
+            console.log("updated tier: ", tier?.tierId);
+            res.status(200).send();
           })
           .catch((err) => {
-            res.status(500).send('updateError');
+            console.log("err", err);
+            res.status(500).send(err.message);
           })
+      }
+      else {
+        res.status(300).send("you error");
       }
     }
     catch (err) {
@@ -75,13 +87,14 @@ export function updateTier(req: any, res: any) {
   });
 }
 
+
 export async function cancelTier(req: any, res: any) {
   try {
     const token: string | null = getToken(req, res);
     const account: string = token ? await getAccount(token) : res.status(401);
 
     if (!account) {
-      res.status(401);
+      res.status(401).send();
     }
     const busboy = new Busboy({ headers: req.headers });
     req.pipe(busboy);
@@ -90,7 +103,14 @@ export async function cancelTier(req: any, res: any) {
         const id: string = JSON.parse(value);
         console.log(`cancel request: ${id}`);
         removeRecord(id, account)
-          .then
+          .then(() => {
+            console.log(`${account} canceled tier: ${id}`);
+            res.status(200).send();
+          })
+          .catch((err) => {
+            console.log("err from cancelling tier ", err);
+            res.status(500).send();
+          });
       }
     });
   }
@@ -101,11 +121,12 @@ export async function cancelTier(req: any, res: any) {
 }
 
 function createRecord(tier: Tier): Promise<boolean> {
+
   return db.collection("Tiers")
     .add(tier)
     .then((result: any) => {
       if (result) {
-        console.log("result", result);
+
         return true;
       }
       else {
@@ -118,10 +139,12 @@ function createRecord(tier: Tier): Promise<boolean> {
 }
 
 function updateRecord(tier: Tier): Promise<boolean> {
-  return db.collection("Tier")
+  console.log("tier is ", tier.tierId);
+  return db.collection("Tiers")
     .where("tierId", "==", tier.tierId).get()
     .then((snapshot: any) => {
       if (snapshot.empty) {
+        console.log("tier not found");
         return Promise.reject(new Error("tier not found."));
       }
       else {
@@ -152,7 +175,7 @@ function removeRecord(tierId: string, account: string): Promise<boolean> {
 }
 
 function validateTier(tier: Tier): Promise<boolean> {
-  console.log("entered validate tier ");
+
   return getTier(tier)
     .then((tier: Tier) => {
       if (tier) {
@@ -171,7 +194,7 @@ function validateTier(tier: Tier): Promise<boolean> {
 function getTier(tier: Tier): Promise<Tier> {
   const web3 = new Web3(getProvider(tier.network));
   const subscriptions = getContract(tier.network, "subscription");
-  const contract = web3.eth.Contract(subscriptions.abi, subscriptions.address);
+  const contract = new web3.eth.Contract(subscriptions.abi, subscriptions.address);
   return contract.methods.getTier(tier.tierId)
     .call()
     .then((result: any[]) => {

@@ -16,7 +16,7 @@ import { orderCreated } from "./createOrder";
 import { getNonce, verifySignature } from "./userManagement";
 import { generateFileLink } from "./fileManagement";
 import { finalizeBuyOrder } from "./executeOrder";
-import { createTier, updateTier, cancelTier } from "./subscriptionManagement";
+import { createTier, updateTier, cancelTier } from "./manageTiers";
 const corsOptions = {
   origin: function (origin:any, callback:any) {
     if (ALLOWED_ORIGINS.indexOf(origin) !== -1 || !origin) {
