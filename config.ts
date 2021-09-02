@@ -20,6 +20,22 @@ export interface Listing {
   expiresAt: string;
 }
 
+export interface Tier{
+  name ?: string;
+  valid: boolean;
+  tierId ?: string;
+  desc ?: string;
+  creator: string;
+  network: number;
+  price: string;
+  commission ?: string;
+}
+
+export type Subscription = {
+  tier: Tier;
+  expirationDate: string;
+}
+
 export interface NFT {
   name: string;
   owner: string;
@@ -79,6 +95,7 @@ type AddressCollection = {
 
 const marketplaceJSON = require("./Marketplace.json");
 const motoVerifiedNFT = require("./BEPMotoNFT.json");
+const subscriptionsJSON = require("./Subscriptions.json");
 const nftTestnetAddress: string = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
 const ganacheNFTAddress: string = "0x0233654873Fc5130530286C9FcB64f8218E01825";
 const ganachenftMarketAddress: string = "0xb52D64dFF89eDF37738C99F609E436dA5Ef8d534";
@@ -108,9 +125,16 @@ const ganacheNFTContract: Contract = {
   abi: motoVerifiedNFT.abi,
 };
 
+const subscriptionBscTest: Contract = {
+  name: "subscription",
+  address: "0xbD1023Ebe5C9433C18C55f9B4b774F9b8F9771D4",
+  abi:subscriptionsJSON.abi
+}
+
 const bscTestnetContracts: ContractCollection = {
   "nft": nftTestnet,
   "market": binaanceTestMarketContract,
+  "subscription":subscriptionBscTest
 };
 
 const ganacheContractsCollection: ContractCollection = {

@@ -16,6 +16,7 @@ import { orderCreated } from "./createOrder";
 import { getNonce, verifySignature } from "./userManagement";
 import { generateFileLink } from "./fileManagement";
 import { finalizeBuyOrder } from "./executeOrder";
+import { createTier, updateTier, cancelTier } from "./subscriptionManagement";
 const corsOptions = {
   origin: function (origin:any, callback:any) {
     if (ALLOWED_ORIGINS.indexOf(origin) !== -1 || !origin) {
@@ -36,5 +37,7 @@ app.post('/getNonce', (req: Express.Request, res: Express.Response) => { getNonc
 app.post('/verifySignature', (req: Express.Request, res: Express.Response) => { verifySignature(req, res) });
 app.post("/generateFileLink", (req: Express.Request, res: Express.Response) => { generateFileLink(req, res) });
 app.post("/finalizeBuyOrder", (req: Express.Request, res: Express.Response) => { finalizeBuyOrder(req, res) });
-
+app.post("/createTier", (req: Express.Request, res: Express.Response) => { createTier(req, res) });
+app.post("/updateTier", (req: Express.Request, res: Express.Response) => { updateTier(req, res) });
+app.post("/cancelTier", (req: Express.Request, res: Express.Response) => { cancelTier(req, res) });
 app.listen(4139,"0.0.0.0", () => { console.log("online."); });

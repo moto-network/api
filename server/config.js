@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getContract = exports.getContractAddress = exports.getProvider = void 0;
 const marketplaceJSON = require("./Marketplace.json");
 const motoVerifiedNFT = require("./BEPMotoNFT.json");
+const subscriptionsJSON = require("./Subscriptions.json");
 const nftTestnetAddress = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
 const ganacheNFTAddress = "0x0233654873Fc5130530286C9FcB64f8218E01825";
 const ganachenftMarketAddress = "0xb52D64dFF89eDF37738C99F609E436dA5Ef8d534";
@@ -31,9 +32,15 @@ const ganacheNFTContract = {
     address: ganacheNFTAddress,
     abi: motoVerifiedNFT.abi,
 };
+const subscriptionBscTest = {
+    name: "subscription",
+    address: "0xbD1023Ebe5C9433C18C55f9B4b774F9b8F9771D4",
+    abi: subscriptionsJSON.abi
+};
 const bscTestnetContracts = {
     "nft": nftTestnet,
     "market": binaanceTestMarketContract,
+    "subscription": subscriptionBscTest
 };
 const ganacheContractsCollection = {
     "nft": ganacheNFTContract,
