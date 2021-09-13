@@ -4,7 +4,7 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 const Busboy = require("busboy");
 
-import { Contract, getContract, getProvider, ListingNFT, Order, TransactionReceipt } from "./config";
+import { Contract, getContract, getProvider, ListingNFT, Listing, TransactionReceipt } from "./config";
 import { toOrderType } from "./createOrder";
 
 
@@ -35,14 +35,14 @@ export function finalizeBuyOrder(req: any, res: any) {
   });
   busboy.on("finish", function () {
     if (nft && hash) {
-      console.log(`${nft.tokenId} buy order. hash: ${hash}`);
+      console.log(`${nft.id} buy order. hash: ${hash}`);
       findAlreadyExecutedOrder(nft, hash)
-        .then((order: Order | null) => {
+        .then((order: Listing | null) => {
           if (order) {
             updateDB(order)
               .then((result) => {
                 if (result) {
-                  console.log(`${nft?.tokenId} buy order done. hash: ${hash}`);
+                  console.log(`${nft?.id} buy order done. hash: ${hash}`);
                   res.status(200).send(order);
                 } else {
                   res.status(300);
@@ -68,9 +68,9 @@ export function finalizeBuyOrder(req: any, res: any) {
  *
  * @param {ListingNFT} nft
  * @param {string} hash
- * @return {Promise<Order | null>}
+ * @return {Promise<Listing | null>}
  */
-function findAlreadyExecutedOrder(nft: ListingNFT, hash: string): Promise<Order | null> {
+function findAlreadyExecutedOrder(nft: ListingNFT, hash: string): Promise<Listing | null> {
   return new Promise((resolve, reject) => {
     const motoMarket: Contract = getContract(nft.network, "market");
     const web3 = new Web3(getProvider(nft.network));
@@ -85,7 +85,7 @@ function findAlreadyExecutedOrder(nft: ListingNFT, hash: string): Promise<Order 
         const blockNumber = transactionReceipt.blockNumber;
         const options = {
           filter: {
-            assetId: nft.tokenId,
+            assetId: nft.id,
             seller: nft.owner,
           },
           fromBlock: blockNumber,
@@ -109,10 +109,10 @@ function findAlreadyExecutedOrder(nft: ListingNFT, hash: string): Promise<Order 
 
 /**
  * update db
- * @param {Order} order
+ * @param {Listing} order
  * @return {Promise<boolean>}
  */
-function updateDB(order: Order): Promise<boolean> {
+function updateDB(order: Listing): Promise<boolean> {
   return new Promise((resolve, reject) => {
     Promise.all([_updateNFT(order), _updateOrder(order)])
       .then((results) => {
@@ -130,10 +130,10 @@ function updateDB(order: Order): Promise<boolean> {
 
 /**
  *
- * @param {Order} order
+ * @param {Listing} order
  * @return {Promise<boolean>}
  */
-function _updateNFT(order: Order): Promise<boolean> {
+function _updateNFT(order: Listing): Promise<boolean> {
   const FieldValue = admin.firestore.FieldValue;
   const nftRef = db.collection("NFTs");
   return new Promise<boolean>((resolve, reject) => {
@@ -161,10 +161,10 @@ function _updateNFT(order: Order): Promise<boolean> {
 
 /**
  *
- * @param {Order} order
+ * @param {Listing} order
  * @return {Promise<boolean>}
  */
-function _updateOrder(order: Order): Promise<boolean> {
+function _updateOrder(order: Listing): Promise<boolean> {
   const orderRef = db.collection("Orders");
   return new Promise<boolean>((resolve, reject) => {
     orderRef.where("id", "==", order.id).get()

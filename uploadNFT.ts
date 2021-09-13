@@ -1,4 +1,5 @@
 import {v4 as uuidv4} from "uuid";
+import { NFT } from "./config";
 
 const Busboy = require("busboy");
 const path = require("path");
@@ -17,16 +18,7 @@ interface Metadata {
   nftfilename?: string;
   phash?: string;
 }
-interface NFT {
-  name: string;
-  owner: string;
-  network: number;
-  tokenId: string;
-  contractAddress: string;
-  contentHash: string;
-  creator: string;
 
-}
 /**
  * adds nft information to firebase database to be accessible to other components
  * @param {object} req
@@ -84,14 +76,14 @@ export function uploadNFT(req: any, res: any): void {
   busboy.on("finish", () => {
     console.log("busy boy on finish");
     if (nft && nftFilename) {
-      console.log(`processing ${nft.tokenId}`);
+      console.log(`processing ${nft.id}`);
       processFile(fileInfo, filepath, nft)
           .then((result: boolean) => {
             if (result) {
-              console.log(`${nft?.tokenId} success.`);
+              console.log(`${nft?.id} success.`);
               res.status(200).send(true);
             } else {
-              console.log(`${nft?.tokenId} failed.`);
+              console.log(`${nft?.id} failed.`);
               res.status(500).send(false);
             }
           })
@@ -327,7 +319,7 @@ function updateDb(metadata: Metadata): Promise<boolean> {
 function _saveFileLocation(fileLocation: string, nft: NFT): Promise<any> {
   const linksRef = db.collection("Links");
   const linkInfo = {
-    tokenId: nft.tokenId,
+    tokenId: nft.id,
     contentHash: nft.contentHash,
     location: fileLocation,
   };

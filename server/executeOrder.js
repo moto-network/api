@@ -34,14 +34,14 @@ function finalizeBuyOrder(req, res) {
     });
     busboy.on("finish", function () {
         if (nft && hash) {
-            console.log(`${nft.tokenId} buy order. hash: ${hash}`);
+            console.log(`${nft.id} buy order. hash: ${hash}`);
             findAlreadyExecutedOrder(nft, hash)
                 .then((order) => {
                 if (order) {
                     updateDB(order)
                         .then((result) => {
                         if (result) {
-                            console.log(`${nft === null || nft === void 0 ? void 0 : nft.tokenId} buy order done. hash: ${hash}`);
+                            console.log(`${nft === null || nft === void 0 ? void 0 : nft.id} buy order done. hash: ${hash}`);
                             res.status(200).send(order);
                         }
                         else {
@@ -69,7 +69,7 @@ exports.finalizeBuyOrder = finalizeBuyOrder;
  *
  * @param {ListingNFT} nft
  * @param {string} hash
- * @return {Promise<Order | null>}
+ * @return {Promise<Listing | null>}
  */
 function findAlreadyExecutedOrder(nft, hash) {
     return new Promise((resolve, reject) => {
@@ -85,7 +85,7 @@ function findAlreadyExecutedOrder(nft, hash) {
             const blockNumber = transactionReceipt.blockNumber;
             const options = {
                 filter: {
-                    assetId: nft.tokenId,
+                    assetId: nft.id,
                     seller: nft.owner,
                 },
                 fromBlock: blockNumber,
@@ -109,7 +109,7 @@ function findAlreadyExecutedOrder(nft, hash) {
 }
 /**
  * update db
- * @param {Order} order
+ * @param {Listing} order
  * @return {Promise<boolean>}
  */
 function updateDB(order) {
@@ -130,7 +130,7 @@ function updateDB(order) {
 }
 /**
  *
- * @param {Order} order
+ * @param {Listing} order
  * @return {Promise<boolean>}
  */
 function _updateNFT(order) {
@@ -160,7 +160,7 @@ function _updateNFT(order) {
 }
 /**
  *
- * @param {Order} order
+ * @param {Listing} order
  * @return {Promise<boolean>}
  */
 function _updateOrder(order) {

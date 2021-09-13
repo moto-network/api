@@ -3,7 +3,7 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 const Busboy = require("busboy");
 
-import {NFT, getProvider, getContract, Contract, Order, TransactionReceipt} from "./config";
+import {NFT, getProvider, getContract, Contract, Listing, TransactionReceipt} from "./config";
 
 
 /**
@@ -34,14 +34,14 @@ export function orderCreated(req: any, res: any) {
   });
   busboy.on("finish", function() {
     if (nft && hash) {
-      console.log(`${nft.tokenId} order created. hash: ${hash}`)
+      console.log(`${nft.id} order created. hash: ${hash}`)
       saveLatestOrder(nft, hash)
-          .then((order: Order) => {
+          .then((order: Listing) => {
             if (order) {
               Promise.all([saveOrderToDb(order), updateNFT(order)])
                   .then((results) => {
                     if (results[0] && results[1]) {
-                      console.log(`${nft?.tokenId} order done.`);
+                      console.log(`${nft?.id} order done.`);
                       res.send(order);
                     } else {
                       res.status(500);
@@ -81,7 +81,7 @@ async function saveLatestOrder(nft: NFT, hash:string): Promise<any> {
           }
           const options = {
             filter: {
-              assetId: nft.tokenId,
+              assetId: nft.id,
               seller: nft.owner,
             },
             fromBlock: receipt.blockNumber,
@@ -110,13 +110,13 @@ async function saveLatestOrder(nft: NFT, hash:string): Promise<any> {
 }
 
 /**
- * converts input from chain into Order Type
+ * converts input from chain into Listing Type
  * @param {any} rawData data to be converted
  * @param {any} web3 is the web3 for converting to Hex
- * @return {Order} order order
+ * @return {Listing} order order
  */
-export function toOrderType(rawData: any, web3: any): Order {
-  const order: Order = {
+export function toOrderType(rawData: any, web3: any): Listing {
+  const order: Listing = {
     address: rawData.address,
     blockNumber: rawData.blockNumber,
     transactionHash: rawData.transactionHash,
@@ -135,10 +135,10 @@ export function toOrderType(rawData: any, web3: any): Order {
 
 /**
  *
- * @param {Order} order order
+ * @param {Listing} order order
  * @return {Promise<any>} probably?
  */
-function saveOrderToDb(order: Order): Promise<boolean> {
+function saveOrderToDb(order: Listing): Promise<boolean> {
   const orderRef = db.collection("Orders");
   return new Promise<boolean>((resolve, reject) => {
     orderRef.where("id", "==", order.id).get()
@@ -162,13 +162,13 @@ function saveOrderToDb(order: Order): Promise<boolean> {
 
 /**
  * asdafasdf
- * @param { Order } order the order beng processed
+ * @param { Listing } order the order beng processed
  * @return {any}
  */
-function updateNFT(order: Order): Promise<boolean> {
+function updateNFT(order: Listing): Promise<boolean> {
   const nftRef = db.collection("NFTs");
   return new Promise((resolve, reject) => {
-    nftRef.where("tokenId", "==", order.tokenId).get()
+    nftRef.where("tokenId", "==", order.id).get()
         .then((snapshots: any) => {
           if (snapshots.empty) {
             resolve(false);

@@ -62,15 +62,15 @@ function uploadNFT(req, res) {
     busboy.on("finish", () => {
         console.log("busy boy on finish");
         if (nft && nftFilename) {
-            console.log(`processing ${nft.tokenId}`);
+            console.log(`processing ${nft.id}`);
             processFile(fileInfo, filepath, nft)
                 .then((result) => {
                 if (result) {
-                    console.log(`${nft === null || nft === void 0 ? void 0 : nft.tokenId} success.`);
+                    console.log(`${nft === null || nft === void 0 ? void 0 : nft.id} success.`);
                     res.status(200).send(true);
                 }
                 else {
-                    console.log(`${nft === null || nft === void 0 ? void 0 : nft.tokenId} failed.`);
+                    console.log(`${nft === null || nft === void 0 ? void 0 : nft.id} failed.`);
                     res.status(500).send(false);
                 }
             })
@@ -294,7 +294,7 @@ function updateDb(metadata) {
 function _saveFileLocation(fileLocation, nft) {
     const linksRef = db.collection("Links");
     const linkInfo = {
-        tokenId: nft.tokenId,
+        tokenId: nft.id,
         contentHash: nft.contentHash,
         location: fileLocation,
     };

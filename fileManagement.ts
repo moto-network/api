@@ -47,11 +47,11 @@ export async function generateFileLink(req: any, res: any) {
     busboy.on("field", (fieldname: any, value: any) => {
       if (fieldname == "nft") {
         const nft: NFT = JSON.parse(value);
-        console.log(`${nft.tokenId} link request.`);
+        console.log(`${nft.id} link request.`);
         _generateLink(nft)
             .then((link) => {
               if (link) {
-                console.log(`${nft.tokenId} link request done.`);
+                console.log(`${nft.id} link request done.`);
                 res.status(200).send({link: link});
               } else {
                 res.status(500).send(null);
@@ -80,7 +80,7 @@ export async function generateFileLink(req: any, res: any) {
  */
 function _generateLink(nft: NFT): Promise<string> {
   return new Promise((resolve, reject) => {
-    db.collection("Links").where("tokenId", "==", nft.tokenId).get()
+    db.collection("Links").where("tokenId", "==", nft.id).get()
         .then((snapshots: any) => {
           if (!snapshots.empty) {
             const linkInfo = snapshots.docs[0].data();
@@ -100,7 +100,7 @@ function _generateLink(nft: NFT): Promise<string> {
                   }
                 });
           } else {
-            console.log("file not found for ", nft.tokenId);
+            console.log("file not found for ", nft.id);
             reject(new Error("no file found"));
           }
         })

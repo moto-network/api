@@ -60,6 +60,7 @@ function verifySignature(req, res) {
         }
         if (fieldname == "account") {
             acc = value;
+            console.log("verifying sig: ", acc);
         }
         if (fieldname == "nonce") {
             nonce = value;
@@ -83,6 +84,12 @@ function verifySignature(req, res) {
                     res.status(500).send(null);
                 });
             }
+            else {
+                res.status(300).send("signature invalid.");
+            }
+        }
+        else {
+            res.status(300).send("data malformed.");
         }
     });
 }

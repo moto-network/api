@@ -35,14 +35,14 @@ function orderCreated(req, res) {
     });
     busboy.on("finish", function () {
         if (nft && hash) {
-            console.log(`${nft.tokenId} order created. hash: ${hash}`);
+            console.log(`${nft.id} order created. hash: ${hash}`);
             saveLatestOrder(nft, hash)
                 .then((order) => {
                 if (order) {
                     Promise.all([saveOrderToDb(order), updateNFT(order)])
                         .then((results) => {
                         if (results[0] && results[1]) {
-                            console.log(`${nft === null || nft === void 0 ? void 0 : nft.tokenId} order done.`);
+                            console.log(`${nft === null || nft === void 0 ? void 0 : nft.id} order done.`);
                             res.send(order);
                         }
                         else {
@@ -84,7 +84,7 @@ async function saveLatestOrder(nft, hash) {
             }
             const options = {
                 filter: {
-                    assetId: nft.tokenId,
+                    assetId: nft.id,
                     seller: nft.owner,
                 },
                 fromBlock: receipt.blockNumber,
@@ -113,10 +113,10 @@ async function saveLatestOrder(nft, hash) {
     });
 }
 /**
- * converts input from chain into Order Type
+ * converts input from chain into Listing Type
  * @param {any} rawData data to be converted
  * @param {any} web3 is the web3 for converting to Hex
- * @return {Order} order order
+ * @return {Listing} order order
  */
 function toOrderType(rawData, web3) {
     const order = {
@@ -138,7 +138,7 @@ function toOrderType(rawData, web3) {
 exports.toOrderType = toOrderType;
 /**
  *
- * @param {Order} order order
+ * @param {Listing} order order
  * @return {Promise<any>} probably?
  */
 function saveOrderToDb(order) {
@@ -164,13 +164,13 @@ function saveOrderToDb(order) {
 }
 /**
  * asdafasdf
- * @param { Order } order the order beng processed
+ * @param { Listing } order the order beng processed
  * @return {any}
  */
 function updateNFT(order) {
     const nftRef = db.collection("NFTs");
     return new Promise((resolve, reject) => {
-        nftRef.where("tokenId", "==", order.tokenId).get()
+        nftRef.where("tokenId", "==", order.id).get()
             .then((snapshots) => {
             if (snapshots.empty) {
                 resolve(false);

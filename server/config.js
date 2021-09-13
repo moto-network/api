@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getContract = exports.getContractAddress = exports.getProvider = void 0;
+exports.getContract = exports.getProvider = void 0;
 const marketplaceJSON = require("./Marketplace.json");
 const motoVerifiedNFT = require("./BEPMotoNFT.json");
 const subscriptionsJSON = require("./Subscriptions.json");
@@ -8,10 +8,6 @@ const nftTestnetAddress = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
 const ganacheNFTAddress = "0x0233654873Fc5130530286C9FcB64f8218E01825";
 const ganachenftMarketAddress = "0xb52D64dFF89eDF37738C99F609E436dA5Ef8d534";
 const binanceTestMarketAddress = "0xd4DF6E0236A01B64DB7f01f970F375384F9f5943";
-const contractAddresses = {
-    "97": { "nft": nftTestnetAddress },
-    "1337": { "nft": ganacheNFTAddress },
-};
 const nftTestnet = {
     name: "nft",
     address: nftTestnetAddress,
@@ -85,16 +81,6 @@ function getProvider(network) {
     return null;
 }
 exports.getProvider = getProvider;
-/**
- * get contract address might deprecate
- * @param {number} network
- * @param {string} name easy name of contract
- * @return {string} address
- */
-function getContractAddress(network, name) {
-    return contractAddresses[network][name];
-}
-exports.getContractAddress = getContractAddress;
 /**
  *  get contract information
  * @param {number} network

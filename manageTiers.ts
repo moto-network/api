@@ -28,8 +28,8 @@ export function createTier(req: any, res: any) {
       if (tier && checkData(tier) && validateTier(tier)) {
         createRecord(tier)
           .then((result: boolean) => {
-            res.status(200).send();
-            console.log("processed tier: ", tier?.tierId);
+            res.status(200).send(true);
+            console.log("processed tier: ", tier?.id);
           })
           .catch((err) => {
             console.log("update error;", err);
@@ -69,7 +69,7 @@ export function updateTier(req: any, res: any) {
       if (tier && checkData(tier) && validateTier(tier)) {
         updateRecord(tier)
           .then((result: boolean) => {
-            console.log("updated tier: ", tier?.tierId);
+            console.log("updated tier: ", tier?.id);
             res.status(200).send();
           })
           .catch((err) => {
@@ -139,9 +139,9 @@ function createRecord(tier: Tier): Promise<boolean> {
 }
 
 function updateRecord(tier: Tier): Promise<boolean> {
-  console.log("tier is ", tier.tierId);
+  console.log("tier is ", tier.id);
   return db.collection("Tiers")
-    .where("tierId", "==", tier.tierId).get()
+    .where("id", "==", tier.id).get()
     .then((snapshot: any) => {
       if (snapshot.empty) {
         console.log("tier not found");
@@ -157,9 +157,9 @@ function updateRecord(tier: Tier): Promise<boolean> {
 
 }
 
-function removeRecord(tierId: string, account: string): Promise<boolean> {
+function removeRecord(id: string, account: string): Promise<boolean> {
   return db.collection("Tiers")
-    .where("tierId", "==", tierId)
+    .where("id", "==", id)
     .delete()
     .then((result: any) => {
       if (result) {
@@ -195,14 +195,14 @@ function getTier(tier: Tier): Promise<Tier> {
   const web3 = new Web3(getProvider(tier.network));
   const subscriptions = getContract(tier.network, "subscription");
   const contract = new web3.eth.Contract(subscriptions.abi, subscriptions.address);
-  return contract.methods.getTier(tier.tierId)
+  return contract.methods.getTier(tier.id)
     .call()
     .then((result: any[]) => {
       if (result) {
         const tier = {
           valid: result[0],
-          tierId: result[1],
-          creator: result[2],
+          id: result[1],
+          owner: result[2],
           price: result[3],
           commission: result[3],
         }
@@ -219,11 +219,11 @@ function getTier(tier: Tier): Promise<Tier> {
 
 function checkData(tier: any): boolean {
   console.log(tier);
-  console.log(tier.creator);
+  console.log(tier.owner);
   const web3 = new Web3(getProvider(97));
   const validCheck = typeof tier.valid == 'boolean';
   const networkCheck = checkNetwork(tier.network);
-  const creatorCheck = checkAddress(tier.creator);
+  const ownerCheck = checkAddress(tier.owner);
   const priceCheck = checkPrice(tier.price);
 
   function checkAddress(address: string): boolean {
@@ -249,8 +249,8 @@ function checkData(tier: any): boolean {
       return false;
     }
   }
-  console.table({ valid: validCheck, network: networkCheck, creator: creatorCheck, price: priceCheck })
-  return validCheck && networkCheck && creatorCheck && priceCheck;
+  console.table({ valid: validCheck, network: networkCheck, owner: ownerCheck, price: priceCheck })
+  return validCheck && networkCheck && ownerCheck && priceCheck;
 }
 
 

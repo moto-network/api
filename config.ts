@@ -1,11 +1,32 @@
-export interface Contract {
-  name: string;
-  address: string;
-  abi: any;
+export interface UniqueOwnable {
+  owner: string;
+  id: string;
+  network: number;
 }
+
+export interface NFT extends UniqueOwnable {
+  name: string;
+  contractAddress: string;
+  contentHash: string;
+  creator: string;
+}
+
+export interface FileNFT extends NFT {
+  readonly smImg?: string;
+  readonly medImg?: string;
+  readonly pHash?: string;
+}
+
 export interface ListingNFT extends NFT {
   readonly onSale: boolean;
   order: Listing;
+}
+
+export interface SearchResults {
+  query: string;
+  suggestedRoute?: string;
+  result?: any;
+  empty: boolean;
 }
 
 export interface Listing {
@@ -17,81 +38,73 @@ export interface Listing {
   seller: string;
   contractAddress: string;
   price: string;
-  expiresAt: string;
+  expiresAt?: string;
+  buyer?: string;
 }
 
-export interface Tier{
-  name ?: string;
-  valid: boolean;
-  tierId ?: string;
-  desc ?: string;
-  creator: string;
+export interface Account {
+  address: string;
   network: number;
-  price: string;
-  commission ?: string;
 }
+
+export type ListingCollection = {
+  [id: string]: Listing;
+}
+
+export type NFTCollection<NFTType extends NFT> = {
+  [tokenId: string]: NFTType;
+}
+
+export type LocalSession = {
+  owner: string;
+  data?: SessionData;
+}
+
+export type Tier = UniqueOwnable & {
+  name?: string;
+  valid: boolean;
+  desc?: string;
+  price: string;
+  commission?: string;
+}
+
 
 export type Subscription = {
   tier: Tier;
   expirationDate: string;
 }
 
-export interface NFT {
-  name: string;
-  owner: string;
-  network: number;
-  tokenId: string;
-  contractAddress: string;
-  contentHash: string;
-  creator: string;
-}
-
-export interface Order {
-  address: string;
-  blockNumber: number;
-  transactionHash: string;
-  id: string;
-  tokenId: string;
-  seller: string;
-  contractAddress: string;
-  price: string;
-  expiresAt: number;
-  buyer?: string;
+export type SessionData = {
+  [dataId: string]: any;
 }
 
 export interface TransactionReceipt {
   status: boolean;
-  transactionHash: string;
-  transactionIndex?: number;
+  hash: string;
+  index?: number;
   blockHash?: string;
   blockNumber?: number;
   contractAddress?: string;
   cumulativeGasUsed?: number;
   gasUsed?: number;
-  logs?: any[] // array of logs ..change
+  logs?: any[] //array of logs ..change
 }
 
-interface ContractCollection {
-  [address: string]: Contract;
+export interface Contract {
+  name: string;
+  address: string;
+  abi: any;
+  desc?: string;
 }
 
 
 interface Network {
   provider: string;
-  contracts: ContractCollection;
-  explorerBaseUrl: string;// must be url
+  contracts: Record<string, Contract>;
+  explorerBaseUrl: string;//must be url
   name: string,
   symbol: string
 }
-
-type NetworkCollection = {
-  [network: string]: Network;
-}
-
-type AddressCollection = {
-  [network: string]: any;
-}
-
 
 const marketplaceJSON = require("./Marketplace.json");
 const motoVerifiedNFT = require("./BEPMotoNFT.json");
@@ -100,10 +113,7 @@ const nftTestnetAddress: string = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
 const ganacheNFTAddress: string = "0x0233654873Fc5130530286C9FcB64f8218E01825";
 const ganachenftMarketAddress: string = "0xb52D64dFF89eDF37738C99F609E436dA5Ef8d534";
 const binanceTestMarketAddress: string = "0xd4DF6E0236A01B64DB7f01f970F375384F9f5943";
-const contractAddresses: AddressCollection = {
-  "97": {"nft": nftTestnetAddress},
-  "1337": {"nft": ganacheNFTAddress},
-};
+
 const nftTestnet: Contract = {
   name: "nft",
   address: nftTestnetAddress,
@@ -131,13 +141,13 @@ const subscriptionBscTest: Contract = {
   abi:subscriptionsJSON.abi
 }
 
-const bscTestnetContracts: ContractCollection = {
+const bscTestnetContracts: Record<string,Contract> = {
   "nft": nftTestnet,
   "market": binaanceTestMarketContract,
   "subscription":subscriptionBscTest
 };
 
-const ganacheContractsCollection: ContractCollection = {
+const ganacheContractsCollection: Record<string,Contract> = {
   "nft": ganacheNFTContract,
   "market": ganacheMarketContract,
 };
@@ -167,7 +177,7 @@ const bscTestnetNetwork: Network = {
   symbol: "BSC_TESTNET"
 };*/
 
-const networkCollection: NetworkCollection = {
+const networkCollection: Record<string,Network> = {
   "97": bscTestnetNetwork,
   "1337": ganacheNetwork,
 };
@@ -183,15 +193,7 @@ export function getProvider(network: number): string | null {
   }
   return null;
 }
-/**
- * get contract address might deprecate
- * @param {number} network
- * @param {string} name easy name of contract
- * @return {string} address
- */
-export function getContractAddress(network: number, name: string): string {
-  return contractAddresses[network][name];
-}
+
 
 /**
  *  get contract information

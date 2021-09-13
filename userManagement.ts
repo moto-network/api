@@ -1,3 +1,4 @@
+import { ResultStorage } from "firebase-functions/v1/testLab";
 
 const sigUtil = require("eth-sig-util");
 const Web3 = require("web3");
@@ -60,6 +61,7 @@ export function verifySignature(req: any, res: any) {
     }
     if (fieldname == "account") {
       acc = value;
+      console.log("verifying sig: ", acc);
     }
     if (fieldname == "nonce") {
       nonce = value;
@@ -76,14 +78,20 @@ export function verifySignature(req: any, res: any) {
         _saveNonce(acc, _getRandomString());
         console.log(`${acc} token issuance`);
         issueToken(acc)
-            .then((token) => {
-              res.status(200).send({token: token});
-            })
-            .catch((err) => {
-              console.log("error issuing token ", err);
-              res.status(500).send(null);
-            });
+          .then((token) => {
+            res.status(200).send({ token: token });
+          })
+          .catch((err) => {
+            console.log("error issuing token ", err);
+            res.status(500).send(null);
+          });
       }
+      else {
+        res.status(300).send("signature invalid.");
+      }
+    }
+    else {
+      res.status(300).send("data malformed.");
     }
   });
 
